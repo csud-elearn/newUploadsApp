@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 class Etudiant(models.Model):
     user = models.OneToOneField(User)
+    classe = models.ManyToManyField('Classe')
     
     def __str__(self):
         return "Etudiant {}".format(self.user.username)
