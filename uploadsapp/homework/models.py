@@ -29,10 +29,6 @@ class Image(models.Model):
     
     description = models.CharField(max_length=300, null=True)
     
-    saturation = models.DecimalField(decimal_places=1, max_digits=2)
-    contraste = models.DecimalField(decimal_places=1, max_digits=2)
-    luminosite = models.DecimalField(decimal_places=1, max_digits=2)
-    
     date = models.DateField(auto_now_add=True)
     
     def __str__(self):
