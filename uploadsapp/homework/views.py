@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
 
 from homework.auth_utils import *
-from homework.forms import *
 from homework.models import *
+from homework.forms import *
 
 def accueil(request):
     return render(request, "homework/accueil.html")
@@ -56,26 +56,30 @@ def inscription(request):
     return render(request, "homework/inscription.html", locals())
 
 def connexion(request):
-    erreur = False
     
-    if request.method == "POST":
-        connexionForm = ConnexionForm(request.POST, request.FILES)
+    if request.user.is_authenticated():
+        return render(request, "homework/connexionConnecte.html", locals())
+    else:    
+        erreur = False
         
-        if connexionForm.is_valid():
-            username = connexionForm.cleaned_data["pseudo"]
-            password = connexionForm.cleaned_data["motDePasse"]
-            user = authenticate(username=username, password=password)
+        if request.method == "POST":
+            connexionForm = ConnexionForm(request.POST, request.FILES)
             
-            if user:
-                login(request, user)
+            if connexionForm.is_valid():
+                username = connexionForm.cleaned_data["pseudo"]
+                password = connexionForm.cleaned_data["motDePasse"]
+                user = authenticate(username=username, password=password)
                 
-                return redirect("homework:bureau")
-            else:
-                erreur = True
-    else:
-        connexionForm = ConnexionForm()
-        
-    return render(request, "homework/login.html", locals())
+                if user:
+                    login(request, user)
+                    
+                    return redirect("homework:bureau")
+                else:
+                    erreur = True
+        else:
+            connexionForm = ConnexionForm()
+            
+        return render(request, "homework/connexionDeconnecte.html", locals())
     
 def deconnexion(request):
     logout(request)
@@ -99,7 +103,7 @@ def classeIndex(request):
         classes = Classe.objects.filter(professeur=professeur)
         
         if request.method == "POST":
-            creerClasseForm = creerClasseForm(request.POST, request.FILES)
+            creerClasseForm = CreerClasseForm(request.POST, request.FILES)
             if creerClasseForm.is_valid():
                 classeNom = creerClasseForm.cleaned_data["nom"]
                 try:
@@ -118,7 +122,7 @@ def classeIndex(request):
     
     elif estEtudiant(request.user):
         etudiant = Etudiant.objects.get(user=request.user)
-        classes = etudiant.classes.all()
+        classes = etudiant.classe.all()
         
         return render(request, "etudiant/classeIndex.html", locals())
         
@@ -135,6 +139,24 @@ def classeEdition(request, classeNom):
         if estProfesseur(request.user):
             professeurConnecte = Professeur.objects.get(user=request.user)
             if professeurConnecte == classeProfesseur:
+                if 'etudiantSuppr' in request.POST:
+                    etudiantSupprForm = EtudiantSupprForm(request.POST, request.FILES)              #<form action="" method="post">
+                    if etudiantSupprForm.is_valid():                                                #{{ form_newsletter }}
+                        for etudiant in etudiantSupprForm.cleaned_data["etudiants"]:                #<input type="submit" name="newsletter_sub" value="Subscribe" />
+                            etudiant.classe.add(classe)                                             #<input type="submit" name="newsletter_unsub" value="Unsubscribe" />
+                            etudiant.save()                                                         #</form>
+    
+                elif 'etudiantAjout' in request.POST:
+                    etudiantAjoutForm = EtudiantAjoutForm(request.POST, request.FILES)
+                    if etudiantAjoutForm.is_valid():
+                        for etudiant in etudiantAjoutForm.cleaned_data["etudiants"]:
+                            etudiant.classe.add(classe)
+                            etudiant.save()
+                
+                else:
+                    etudiantSupprForm = EtudiantSupprForm()
+                    etudiantAjoutForm = EtudiantAjoutForm()
+                
                 return render(request, "professeur/classeEditionPropre.html", locals())
             else:
                 return render(request, "professeur/classeEditionAutre.html", locals())
@@ -147,5 +169,51 @@ def classeEdition(request, classeNom):
     else:
         return redirect("homework:connexion")
         
+def devoirIndex(request):
+    if estProfesseur(request.user):
+        erreur = False
+        professeur = Professeur.objects.get(user=request.user)
+        classes = Classe.objects.filter(professeur=professeur)
+        devoirs = Devoir.objects.filter(professeur=professeur)
+        form.fields['classe'].queryset = Classe.objects.filter(professeur=professeur)
+        
+        if request.method == "POST":
+            creerDevoirForm = CreerDevoirForm(request.POST, request.FILES)
+            if form.is_valid():
+                try:
+                    devoir = Devoir.objects.get(titre=creerDevoirForm.cleaned_data["titre"])
+                    erreur = True
+                except:
+                    professeur = Professeur.objects.get(user=request.user)
+                    devoir = Devoir()
+                    devoir.titre = creerDevoirForm.cleaned_data["titre"]
+                    devoir.consigne = creerDevoirForm.cleaned_data["consigne"]
+                    devoir.consigneImg = creerDevoirForm.cleaned_data["consigneImg"]
+                    devoir.reponse = creerDevoirForm.cleaned_data["reponse"]
+                    devoir.reponseImg = creerDevoirForm.cleaned_data["reponseImg"]
+                    devoir.dateReddition = creerDevoirForm.cleaned_data["dateReddition"]
+                    devoir.save()
+                    for classeNom in form.cleaned_data['classe']:
+                        classe = Classe.objects.get(nom=classeNom)
+                        devoir.classe.add(classe)
+                        tag.save()
+        else:
+            creerDevoirForm = CreerDevoirForm()
+        
+        return render(request, "professeur/devoirIndex.html", locals())
     
+    elif estEtudiant(request.user):
+        etudiant = Etudiant.objects.get(user=request.user)
+        classes = etudiant.classe.all()
+        devoirs = []
+        for classe in classes:
+            devoirs += Devoir.objects.filter(classes=classe)
+        
+        return render(request, "etudiant/devoirIndex.html", locals())
+    
+    else:
+        return redirect("homework:connexion")
+
+def devoirEdition(request, devoirTitre):
+    devoir = Devoir.objects.get(titre=devoirTitre)
     
