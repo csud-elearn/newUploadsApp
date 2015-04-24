@@ -42,7 +42,7 @@ class Devoir(models.Model):
     titre = models.CharField(max_length=50)
     consigne = models.CharField(max_length=300)
     consigneImg = models.ImageField(upload_to="professeur/consignes", null=True)
-    reponse = models.CharField(max_length=300)
+    reponse = models.CharField(max_length=300, null=True)
     reponseImg = models.ImageField(upload_to="professeur/corriges", null=True)
     
     dateCreation = models.DateField(auto_now_add=True)

@@ -224,13 +224,20 @@ def devoirEdition(request, devoirTitre):
             if request.method == "POST":
                 if 'devoirConsImg' in request.POST:
                     devoirConsImgForm = DevoirConsImgForm(request.POST, request.FILES)
-                    
+                    devoir.consigneImg = devoirConsImgForm.cleaned_data["consigneImg"]
+                    devoir.save()
                 elif 'devoirRep' in request.POST:
-                    lala        
+                    devoirRepForm = DevoirRepForm(request.POST, request.FILES)
+                    devoir.reponse = devoirRepForm.cleaned_data["reponse"]
+                    devoir.save()        
                 elif 'devoirRepImg' in request.POST:
-                    lala        
+                    devoirRepImgForm = DevoirRepImgForm(request.POST, request.FILES)
+                    devoir.reponseImg = devoirRepImgForm.cleaned_data["reponseImg"]
+                    devoir.save()    
                 elif 'devoirDate' in request.POST:
-                    lala    
+                    devoirDateForm = DevoirDateForm(request.POST, request.FILES)
+                    devoir.dateReddition = devoirDateForm.cleaned_data["dateReddition"]
+                    devoir.save()
             else:
                 devoirConsImgForm = DevoirConsImgForm()
                 devoirRepForm = DevoirRepForm()
@@ -241,6 +248,14 @@ def devoirEdition(request, devoirTitre):
         else:
             return render(request, "professeur/devoirEditionAutre.html", locals()) 
     elif estEtudiant(request.user):
-        lala
+        etudiant = Etudiant.objects.get(user=request.user)
+        autorise = False
+        for devoirClasse in devoir.classe:
+            if devoirClasse in etudiant.classe:
+                autorise = True
+        if autorise:
+            return render(request, "etudiant/devoirEditionPropre.html", locals())
+        else:
+            return render(request, "etudiant/devoirEditionAutre.html", locals())
     else:
         return redirect("homework:connexion")  
