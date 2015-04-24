@@ -95,7 +95,7 @@ def bureau(request):
     
     else:
         return redirect("homework:connexion")
-        
+
 def classeIndex(request):
     if estProfesseur(request.user):
         erreur = False
@@ -128,7 +128,7 @@ def classeIndex(request):
         
     else:
         return redirect("homework:connexion")
-        
+
 def classeEdition(request, classeNom):
     if estProfesseur(request.user) or estEtudiant(request.user):
         classe = Classe.objects.get(nom=classeNom)
@@ -169,7 +169,7 @@ def classeEdition(request, classeNom):
     
     else:
         return redirect("homework:connexion")
-        
+
 def devoirIndex(request):
     if estProfesseur(request.user):
         erreur = False
@@ -258,4 +258,48 @@ def devoirEdition(request, devoirTitre):
         else:
             return render(request, "etudiant/devoirEditionAutre.html", locals())
     else:
-        return redirect("homework:connexion")  
+        return redirect("homework:connexion")
+
+def chargerImage(request, devoirTitre):
+    if estProfesseur(request.user):
+        return render(request, "professeur/nonAutorise.html", locals())
+    
+    elif estEtudiant(request.user):
+        devoir = Devoir.objects.get(titre=devoirTitre)
+        etudiant = Etudiant.objects.get(user=request.user)
+        if request.method == "POST":
+            chargerImageForm = ChargerImageForm(request.POST, request.FILES)
+            if chargerImageForm.is_valid():
+                image = Image()
+                image.etudiant = etudiant
+                image.photo = chargerImageForm.cleaned_data["photo"]
+                image.devoir = devoir
+                image.description = chargerImageForm.cleaned_data["description"]
+        else:
+            chargerImageForm = ChargerImageForm()
+        
+        return render(request, "etudiant/chargerImage.html", locals())
+    else:
+        return redirect("homework:connexion")
+
+def imageIndexEtudiant(request):
+    if estProfesseur(request.user):
+        return render(request, "professeur/nonAutorise.html", locals())
+    elif estEtudiant(request.user):
+        lala
+    else:
+        return redirect("homework:connexion")
+
+def imageEditionEtudiant(request, imageDevoir):
+    if estProfesseur(request.user):
+        return render(request, "professeur/nonAutorise.html", locals())
+    elif estEtudiant(request.user):
+        lala    
+    else:
+        return redirect("homework:connexion")
+
+def imageIndexProfesseur(request, devoirTitre):
+    lala
+
+def imageEditionProfesseur(request, devoirTitre, imageEtudiant):
+    lala
