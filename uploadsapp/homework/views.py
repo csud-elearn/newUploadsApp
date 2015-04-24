@@ -139,19 +139,20 @@ def classeEdition(request, classeNom):
         if estProfesseur(request.user):
             professeurConnecte = Professeur.objects.get(user=request.user)
             if professeurConnecte == classeProfesseur:
-                if 'etudiantSuppr' in request.POST:
-                    etudiantSupprForm = EtudiantSupprForm(request.POST, request.FILES)              #<form action="" method="post">
-                    if etudiantSupprForm.is_valid():                                                #{{ form_newsletter }}
-                        for etudiant in etudiantSupprForm.cleaned_data["etudiants"]:                #<input type="submit" name="newsletter_sub" value="Subscribe" />
-                            etudiant.classe.add(classe)                                             #<input type="submit" name="newsletter_unsub" value="Unsubscribe" />
-                            etudiant.save()                                                         #</form>
-    
-                elif 'etudiantAjout' in request.POST:
-                    etudiantAjoutForm = EtudiantAjoutForm(request.POST, request.FILES)
-                    if etudiantAjoutForm.is_valid():
-                        for etudiant in etudiantAjoutForm.cleaned_data["etudiants"]:
-                            etudiant.classe.add(classe)
-                            etudiant.save()
+                if request.method == "POST":
+                    if 'etudiantSuppr' in request.POST:
+                        etudiantSupprForm = EtudiantSupprForm(request.POST, request.FILES)              #<form action="" method="post">
+                        if etudiantSupprForm.is_valid():                                                #{{ form_newsletter }}
+                            for etudiant in etudiantSupprForm.cleaned_data["etudiants"]:                #<input type="submit" name="newsletter_sub" value="Subscribe" />
+                                etudiant.classe.add(classe)                                             #<input type="submit" name="newsletter_unsub" value="Unsubscribe" />
+                                etudiant.save()                                                         #</form>
+        
+                    elif 'etudiantAjout' in request.POST:
+                        etudiantAjoutForm = EtudiantAjoutForm(request.POST, request.FILES)
+                        if etudiantAjoutForm.is_valid():
+                            for etudiant in etudiantAjoutForm.cleaned_data["etudiants"]:
+                                etudiant.classe.add(classe)
+                                etudiant.save()
                 
                 else:
                     etudiantSupprForm = EtudiantSupprForm()
@@ -216,4 +217,30 @@ def devoirIndex(request):
 
 def devoirEdition(request, devoirTitre):
     devoir = Devoir.objects.get(titre=devoirTitre)
-    
+    if estProfesseur(request.user):
+        professeurConnecte = Professeur.objects.get(user=request.user)
+        devoirProfesseur = devoir.Professeur
+        if professeurConnecte == devoirProfesseur:
+            if request.method == "POST":
+                if 'devoirConsImg' in request.POST:
+                    devoirConsImgForm = DevoirConsImgForm(request.POST, request.FILES)
+                    
+                elif 'devoirRep' in request.POST:
+                    lala        
+                elif 'devoirRepImg' in request.POST:
+                    lala        
+                elif 'devoirDate' in request.POST:
+                    lala    
+            else:
+                devoirConsImgForm = DevoirConsImgForm()
+                devoirRepForm = DevoirRepForm()
+                devoirRepImgForm = DevoirRepImgForm()
+                devoirDateForm = DevoirDateForm()
+            
+            return render(request, "professeur/devoirEditionPropre.html", locals())
+        else:
+            return render(request, "professeur/devoirEditionAutre.html", locals()) 
+    elif estEtudiant(request.user):
+        lala
+    else:
+        return redirect("homework:connexion")  
