@@ -16,8 +16,8 @@ def inscription(request):
         if inscriptionform.is_valid():
             username = inscriptionform.cleaned_data["pseudo"]
             password = inscriptionform.cleaned_data["motDePasse"]
-            first_name = inscriptionform.cleaned_data["Prénom"]
-            last_name = inscriptionform.cleaned_data["Nom"]
+            first_name = inscriptionform.cleaned_data["prenom"]
+            last_name = inscriptionform.cleaned_data["nom"]
             
             try:
                 User.objects.get(username=username)
@@ -25,11 +25,11 @@ def inscription(request):
             except User.DoesNotExist:
                 modeleCompte = None
                 
-                if inscriptionform.cleaned_data["modèleCompte"] == "etudiant":
+                if inscriptionform.cleaned_data["modeleCompte"] == "etudiant":
                     modeleCompte = Etudiant()
                     group_name = "étudiants"
                     
-                elif inscriptionform.cleaned_data["modèleCompte"] == "professeur":
+                elif inscriptionform.cleaned_data["modeleCompte"] == "professeur":
                     modeleCompte = Professeur()
                     group_name = "professeurs"
                     
