@@ -208,7 +208,8 @@ def devoirIndex(request):
         classes = etudiant.classe.all()
         devoirs = []
         for classe in classes:
-            devoirs += Devoir.objects.filter(classes=classe)
+            devoirs.append(Devoir.objects.filter(classes=classe))
+            #devoirs += Devoir.objects.filter(classes=classe)
         
         return render(request, "etudiant/devoirIndex.html", locals())
     
@@ -286,20 +287,70 @@ def imageIndexEtudiant(request):
     if estProfesseur(request.user):
         return render(request, "professeur/nonAutorise.html", locals())
     elif estEtudiant(request.user):
-        lala
+        etudiant = Etudiant.objects.get(user=request.user)
+        imageAucune = False
+        try:
+            images = Image.objects.filter(etudiant=etudiant)
+        except:
+            imageAucune = True
+            
+        return render(request, "etudiant/imageIndex.html", locals())
     else:
         return redirect("homework:connexion")
 
-def imageEditionEtudiant(request, imageDevoir):
+def imageEditionEtudiant(request, devoirTitre):
     if estProfesseur(request.user):
         return render(request, "professeur/nonAutorise.html", locals())
     elif estEtudiant(request.user):
-        lala    
+        etudiant = Etudiant.objects.get(user=request.user)
+        imageAucune = False
+        try:
+            devoir = Devoir.objects.get(titre=devoirTitre)
+            images = Image.objects.filter(etudiant=etudiant)
+            image = images.objects.get(devoir=devoir)
+        except:
+            imageAucune = True
+        
+        return render(request, "etudiant/imageEdition.html", locals())
     else:
         return redirect("homework:connexion")
 
-def imageIndexProfesseur(request, devoirTitre):
-    lala
+def imageIndexProfesseur(request, devoirTitre, classeNom):
+    if estEtudiant(request.user):
+        return render(request, "etudiant/nonAutorise.html", locals())
+    elif estProfesseur(request.user):
+        professeur = Professeur.objects.get(user=request.user)
+        devoir = Devoir.objects.get(titre=devoirTitre)
+        if devoir.professeur == professeur:
+            classe = Classe.objects.get(nom=classeNom)
+            etudiants = Etudiant.objects.filter(classe=classe)
+            images = Image.objects.filter(devoir=devoir, [etudiant=etudiant for etudiant in etudiants])
+            #imagesDevoirClasse = imagesDevoir.filter(etudiant in etudiants)
+            #imagesDevoirClasse = []
+            #for etudiant in etudiants:
+            #try:
+            #   image = imagesDevoir.get(etudiant=etudiant)
+            #   imagesDevoirClasse.append(image)
+            #except:
+            #   pass
+            return render(request, "professeur/imageIndex.html", locals())
+        else:
+            return render(request, "professeur/nonAutorise.html", locals())
+    else:
+        return redirect("homework:connexion")
 
-def imageEditionProfesseur(request, devoirTitre, imageEtudiant):
-    lala
+def imageEditionProfesseur(request, devoirTitre, etudiantUsername):
+    if estEtudiant(request.user):
+        return render(request, "etudiant/nonAutorise.html", locals())
+    elif estProfesseur(request.user):
+        devoir = Devoir.objects.get(titre=devoirTitre)
+        professeur = Professeur.objects.get(request.user)
+        if professeur == devoir.professeur:
+            etudiant = Etudiant.objects.get(user.username=etudiantUsername)
+            imageEleve = Image.objects.filter(etudiant=etudiant, devoir=devoir)
+                
+            return render(request, "professeur/imageEdition.html", locals())
+        else:
+            return render(request, "professeur/nonAutorise.html", locals())
+    else:
+        return redirect("homework:connexion")
