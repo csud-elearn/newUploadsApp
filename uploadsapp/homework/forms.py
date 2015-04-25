@@ -12,16 +12,30 @@ class InscriptionForm(forms.Form):
     motDePasse = forms.CharField(label="Mot de passe", widget=forms.PasswordInput())
 
 class ConnexionForm(forms.Form):
-    pseudo = 
-    motDePasse = 
+    pseudo = forms.CharField(label="Pseudo", max_length=30, widget=forms.TextInput())
+    motDePasse = forms.CharField(label="Mot de passe", widget=forms.PasswordInput())
     
 class CreerClasseForm(forms.Form):
-    nom =
-    branche =
+    nom = forms.CharField(label="Nom", max_length=50, widget=forms.TextInput())
+    branche = forms.ChoiceField(label='Branche', choices=(
+        ("", "Choisissez votre Branche"),
+        ("Allemand", "Allemand"),
+        ("Anglais", "Anglais"),
+        ("Arts Visuels", "Arts Visuels"),
+        ("Biologie", "Biologie"),
+        ("Chimie", "Chimie"),
+        ("Français", "Français"),
+        ("Histoire", "Histoire"),
+        ("Maths", "Maths"),
+        ("Musique", "Musique"),
+        ("Philosophie", "Philosophie"),
+        ("Physique", "Physique"),
+        ("Sport", "Sport"),
+        ))
     
 class EtudiantAjoutForm(forms.Form):
-    etudiants =
-
+    etudiants = forms.ModelMultipleChoiceField(label="Etudiants à ajouter", queryset=Classe.objects.all(), to_field_name="user.username", widget=forms.CheckboxSelectMultiple())
+    classes = forms.ModelMultipleChoiceField(label="", queryset=Classe.objects.all(), to_field_name="", widget=forms.CheckboxSelectMultiple())
 class EtudiantSupprForm(forms.Form):
     etudiants =
 
