@@ -11,13 +11,13 @@ def accueil(request):
     
 def inscription(request):
     if request.method == "POST":
-        inscriptionform = InscriptionForm(request.POST, request.FILES)
+        inscriptionForm = InscriptionForm(request.POST, request.FILES)
         
-        if inscriptionform.is_valid():
-            username = inscriptionform.cleaned_data["pseudo"]
-            password = inscriptionform.cleaned_data["motDePasse"]
-            first_name = inscriptionform.cleaned_data["prenom"]
-            last_name = inscriptionform.cleaned_data["nom"]
+        if inscriptionForm.is_valid():
+            username = inscriptionForm.cleaned_data["pseudo"]
+            password = inscriptionForm.cleaned_data["motDePasse"]
+            first_name = inscriptionForm.cleaned_data["prenom"]
+            last_name = inscriptionForm.cleaned_data["nom"]
             
             try:
                 User.objects.get(username=username)
@@ -25,11 +25,11 @@ def inscription(request):
             except User.DoesNotExist:
                 modeleCompte = None
                 
-                if inscriptionform.cleaned_data["modeleCompte"] == "etudiant":
+                if inscriptionForm.cleaned_data["modeleCompte"] == "etudiant":
                     modeleCompte = Etudiant()
                     group_name = "étudiants"
                     
-                elif inscriptionform.cleaned_data["modeleCompte"] == "professeur":
+                elif inscriptionForm.cleaned_data["modeleCompte"] == "professeur":
                     modeleCompte = Professeur()
                     group_name = "professeurs"
                     
@@ -51,14 +51,14 @@ def inscription(request):
                 return redirect("homework:connexion")
 
     else:
-        inscriptionform = InscriptionForm()
+        inscriptionForm = InscriptionForm()
         
     return render(request, "homework/inscription.html", locals())
 
 def connexion(request):
     
     if request.user.is_authenticated():
-        return render(request, "homework/connexionConnecte.html", locals())
+        return redirect("homework:bureau")
     else:    
         erreur = False
         
@@ -79,7 +79,7 @@ def connexion(request):
         else:
             connexionForm = ConnexionForm()
             
-        return render(request, "homework/connexionDeconnecte.html", locals())
+        return render(request, "homework/connexion.html", locals())
     
 def deconnexion(request):
     logout(request)
@@ -328,7 +328,7 @@ def imageIndexProfesseur(request, devoirTitre, classeNom):
         if devoir.professeur == professeur:
             classe = Classe.objects.get(nom=classeNom)
             etudiants = Etudiant.objects.filter(classe=classe)
-            images = Image.objects.filter(devoir=devoir, [etudiant=etudiant for etudiant in etudiants])
+            images = Image.objects.filter(devoir=devoir, etudiant=etudiants)
             #imagesDevoirClasse = imagesDevoir.filter(etudiant in etudiants)
             #imagesDevoirClasse = []
             #for etudiant in etudiants:
@@ -350,7 +350,7 @@ def imageEditionProfesseur(request, devoirTitre, etudiantUsername):
         devoir = Devoir.objects.get(titre=devoirTitre)
         professeur = Professeur.objects.get(request.user)
         if professeur == devoir.professeur:
-            etudiant = Etudiant.objects.get(user.username=etudiantUsername)
+            etudiant = Etudiant.objects.get(username=etudiantUsername)
             imageEleve = Image.objects.filter(etudiant=etudiant, devoir=devoir)
                 
             return render(request, "professeur/imageEdition.html", locals())

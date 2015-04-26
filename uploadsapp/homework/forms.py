@@ -1,6 +1,8 @@
 from django import forms
 from django.forms.extras.widgets import *
 
+from homework.models import Classe, Etudiant
+
 class InscriptionForm(forms.Form):
     prenom = forms.CharField(label="Prénom", max_length=30, widget=forms.TextInput())
     nom = forms.CharField(label="Nom", max_length=30, widget=forms.TextInput())
@@ -34,10 +36,10 @@ class CreerClasseForm(forms.Form):
         ))
     
 class EtudiantAjoutForm(forms.Form):
-    etudiants = forms.ModelMultipleChoiceField(label="Etudiants à ajouter", queryset=Classe.objects.all(), to_field_name="user.username", widget=forms.CheckboxSelectMultiple())
+    etudiants = forms.ModelMultipleChoiceField(label="Etudiants à ajouter", queryset=Etudiant.objects.all(), to_field_name="user.username", widget=forms.CheckboxSelectMultiple())
 
 class EtudiantSupprForm(forms.Form):
-    etudiants = forms.ModelMultipleChoiceField(label="Etudiants à supprimer", queryset=Classe.objects.all(), to_field_name="user.username", widget=forms.CheckboxSelectMultiple())
+    etudiants = forms.ModelMultipleChoiceField(label="Etudiants à supprimer", queryset=Etudiant.objects.all(), to_field_name="user.username", widget=forms.CheckboxSelectMultiple())
 
 class CreerDevoirForm(forms.Form):
     titre = forms.CharField(label="Titre", max_length=50, widget=forms.TextInput())
@@ -45,7 +47,7 @@ class CreerDevoirForm(forms.Form):
     consigneImg = forms.ImageField(label="Consigne en image", required=False, widget=forms.FileInput())
     reponse = forms.CharField(label="Réponse", required=False, max_length=300, widget=forms.Textarea())
     reponseImg = forms.ImageField(label="Réponse en image", required=False, widget=forms.FileInput())
-    dateReddition = forms.DateField(label="Date de reddition", widget=formsDatePicker())
+    dateReddition = forms.DateField(label="Date de reddition", widget=forms.DateInput())
     classe = forms.ModelMultipleChoiceField(label="Classes", queryset=Classe.objects.all(), to_field_name="nom", widget=forms.CheckboxSelectMultiple())
     
 class DevoirConsImgForm(forms.Form):
@@ -58,7 +60,7 @@ class DevoirRepImgForm(forms.Form):
     reponseImg = forms.ImageField(label="Réponse en image", widget=forms.FileInput())
 
 class DevoirDateForm(forms.Form):
-    dateReddition = forms.DateField(label="Date de reddition", widget=formsDatePicker())
+    dateReddition = forms.DateField(label="Date de reddition", widget=forms.DateInput())
 
 class ChargerImageForm(forms.Form):
     photo = forms.ImageField(label="Photo", widget=forms.FileInput())

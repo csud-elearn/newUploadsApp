@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block titre %}
+    Inscription
+{% endblock %}
+
+{% block body %}
+    <h1>S'inscrire</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ inscriptionForm.as_p }}
+        <input type="submit" value="s'inscrire"/>
+    </form>
+{% endblock %}
