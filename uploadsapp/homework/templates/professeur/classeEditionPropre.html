@@ -12,4 +12,16 @@
         <li>{{ etudiant.user.username }}</li>
     {% endfor %}
     </ul>
+    <h2>Ajouter élève</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ etudiantAjoutForm.as_p }}
+        <input type="submit"  name="etudiantAjout" value="Ajouter"/>
+    </form>
+    <h2>Supprimer élève</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ etudiantSupprForm.as_p }}
+        <input type="submit"  name="etudiantSuppr"  value="Supprimer"/>
+    </form>
 {% endblock %}

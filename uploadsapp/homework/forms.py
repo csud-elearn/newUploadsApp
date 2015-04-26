@@ -37,10 +37,10 @@ class CreerClasseForm(forms.Form):
         ))
     
 class EtudiantAjoutForm(forms.Form):
-    etudiants = forms.ModelMultipleChoiceField(label="Etudiants à ajouter", queryset=Etudiant.objects.all(), to_field_name="user.username", widget=forms.CheckboxSelectMultiple())
+    etudiants = forms.ModelMultipleChoiceField(label="Etudiants à ajouter", queryset=Etudiant.objects.all(), to_field_name="user", widget=forms.CheckboxSelectMultiple())
 
 class EtudiantSupprForm(forms.Form):
-    etudiants = forms.ModelMultipleChoiceField(label="Etudiants à supprimer", queryset=Etudiant.objects.all(), to_field_name="user.username", widget=forms.CheckboxSelectMultiple())
+    etudiants = forms.ModelMultipleChoiceField(label="Etudiants à supprimer", queryset=Etudiant.objects.all(), to_field_name="user", widget=forms.CheckboxSelectMultiple())
 
 class CreerDevoirForm(forms.Form):
     titre = forms.CharField(label="Titre", max_length=50, widget=forms.TextInput())

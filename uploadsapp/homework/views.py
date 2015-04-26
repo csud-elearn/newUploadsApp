@@ -138,7 +138,7 @@ def classeIndex(request):
 def classeEdition(request, classeNom):
     if estProfesseur(request.user) or estEtudiant(request.user):
         classe = Classe.objects.get(nom=classeNom)
-        classeEtudiants = Etudiant.objects.filter(classe=classe).order_by("user.first_name")
+        classeEtudiants = Etudiant.objects.filter(classe=classe)
         classeProfesseur = classe.professeur
         etudiantsTous = Etudiant.objects.exclude(classe=classe)
         
@@ -151,7 +151,12 @@ def classeEdition(request, classeNom):
                         if etudiantSupprForm.is_valid():                                                #{{ form_newsletter }}
                             for etudiant in etudiantSupprForm.cleaned_data["etudiants"]:                #<input type="submit" name="newsletter_sub" value="Subscribe" />
                                 etudiant.classe.add(classe)                                             #<input type="submit" name="newsletter_unsub" value="Unsubscribe" />
-                                etudiant.save()                                                         #</form>
+                                etudiant.save()    
+                                
+                                etudiantSupprForm = EtudiantSupprForm()
+                                etudiantAjoutForm = EtudiantAjoutForm()
+                                etudiantSupprForm.fields['etudiants'].queryset = Etudiant.objects.filter(classe=classe)
+                                etudiantAjoutForm.fields['etudiants'].queryset = Etudiant.objects.exclude(classe=classe)
         
                     elif 'etudiantAjout' in request.POST:
                         etudiantAjoutForm = EtudiantAjoutForm(request.POST, request.FILES)
@@ -159,13 +164,16 @@ def classeEdition(request, classeNom):
                             for etudiant in etudiantAjoutForm.cleaned_data["etudiants"]:
                                 etudiant.classe.add(classe)
                                 etudiant.save()
-                
+                                
+                                etudiantSupprForm = EtudiantSupprForm()
+                                etudiantAjoutForm = EtudiantAjoutForm()
+                                etudiantSupprForm.fields['etudiants'].queryset = Etudiant.objects.filter(classe=classe)
+                                etudiantAjoutForm.fields['etudiants'].queryset = Etudiant.objects.exclude(classe=classe)
                 else:
                     etudiantSupprForm = EtudiantSupprForm()
                     etudiantAjoutForm = EtudiantAjoutForm()
-                
-                etudiantSupprForm.fields['etudiants'].queryset = Etudiant.objects.filter(classe=classe)
-                etudiantAjoutForm.fields['etudiants'].queryset = Etudiant.objects.exclude(classe=classe)
+                    etudiantSupprForm.fields['etudiants'].queryset = Etudiant.objects.filter(classe=classe)
+                    etudiantAjoutForm.fields['etudiants'].queryset = Etudiant.objects.exclude(classe=classe)
                 
                 return render(request, "professeur/classeEditionPropre.html", locals())
             else:
