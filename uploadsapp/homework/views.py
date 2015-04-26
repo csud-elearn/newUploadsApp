@@ -18,6 +18,7 @@ def inscription(request):
             password = inscriptionForm.cleaned_data["motDePasse"]
             first_name = inscriptionForm.cleaned_data["prenom"]
             last_name = inscriptionForm.cleaned_data["nom"]
+            eMail = inscriptionForm.cleaned_data["courriel"]
             
             try:
                 User.objects.get(username=username)
@@ -33,7 +34,9 @@ def inscription(request):
                     modeleCompte = Professeur()
                     group_name = "professeurs"
                     
-                user = User.objects.create_user(username, password, first_name, last_name)
+                user = User.objects.create_user(username, eMail, password)
+                user.first_name = first_name
+                user.last_name = last_name
                 
                 try:
                     groupe = Group.objects.get(name=group_name)

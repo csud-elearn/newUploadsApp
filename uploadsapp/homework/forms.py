@@ -6,6 +6,7 @@ from homework.models import Classe, Etudiant
 class InscriptionForm(forms.Form):
     prenom = forms.CharField(label="Prénom", max_length=30, widget=forms.TextInput())
     nom = forms.CharField(label="Nom", max_length=30, widget=forms.TextInput())
+    courriel = forms.CharField(label='E-mail', widget=forms.EmailInput())
     modeleCompte = forms.ChoiceField(label='Type de compte', choices=(
         ("professeur", "Professeur"),
         ("etudiant", "Étudiant"),
