@@ -10,56 +10,58 @@ def accueil(request):
     return render(request, "homework/accueil.html")
     
 def inscription(request):
-    if request.method == "POST":
-        inscriptionForm = InscriptionForm(request.POST, request.FILES)
-        
-        if inscriptionForm.is_valid():
-            username = inscriptionForm.cleaned_data["pseudo"]
-            password = inscriptionForm.cleaned_data["motDePasse"]
-            first_name = inscriptionForm.cleaned_data["prenom"]
-            last_name = inscriptionForm.cleaned_data["nom"]
-            eMail = inscriptionForm.cleaned_data["courriel"]
+    if request.user.is_authenticated():
+        return redirect("homework:bureau")
+    else:
+        if request.method == "POST":
+            inscriptionForm = InscriptionForm(request.POST, request.FILES)
             
-            try:
-                User.objects.get(username=username)
-            
-            except User.DoesNotExist:
-                modeleCompte = None
-                
-                if inscriptionForm.cleaned_data["modeleCompte"] == "etudiant":
-                    modeleCompte = Etudiant()
-                    group_name = "étudiants"
-                    
-                elif inscriptionForm.cleaned_data["modeleCompte"] == "professeur":
-                    modeleCompte = Professeur()
-                    group_name = "professeurs"
-                    
-                user = User.objects.create_user(username, eMail, password)
-                user.first_name = first_name
-                user.last_name = last_name
+            if inscriptionForm.is_valid():
+                username = inscriptionForm.cleaned_data["pseudo"]
+                password = inscriptionForm.cleaned_data["motDePasse"]
+                first_name = inscriptionForm.cleaned_data["prenom"]
+                last_name = inscriptionForm.cleaned_data["nom"]
+                eMail = inscriptionForm.cleaned_data["courriel"]
                 
                 try:
-                    groupe = Group.objects.get(name=group_name)
+                    User.objects.get(username=username)
                 
-                except:
-                    groupe = Group.objects.create(name=group_name)
-                
-                user.groups.add(groupe)
-                user.save()
+                except User.DoesNotExist:
+                    modeleCompte = None
                     
-                compte = modeleCompte
-                compte.user = user
-                compte.save()
-                
-                return redirect("homework:connexion")
-
-    else:
-        inscriptionForm = InscriptionForm()
-        
-    return render(request, "homework/inscription.html", locals())
+                    if inscriptionForm.cleaned_data["modeleCompte"] == "etudiant":
+                        modeleCompte = Etudiant()
+                        group_name = "étudiants"
+                        
+                    elif inscriptionForm.cleaned_data["modeleCompte"] == "professeur":
+                        modeleCompte = Professeur()
+                        group_name = "professeurs"
+                        
+                    user = User.objects.create_user(username, eMail, password)
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    
+                    try:
+                        groupe = Group.objects.get(name=group_name)
+                    
+                    except:
+                        groupe = Group.objects.create(name=group_name)
+                    
+                    user.groups.add(groupe)
+                    user.save()
+                        
+                    compte = modeleCompte
+                    compte.user = user
+                    compte.save()
+                    
+                    return redirect("homework:connexion")
+    
+        else:
+            inscriptionForm = InscriptionForm()
+            
+        return render(request, "homework/inscription.html", locals())
 
 def connexion(request):
-    
     if request.user.is_authenticated():
         return redirect("homework:bureau")
     else:    
@@ -87,7 +89,7 @@ def connexion(request):
 def deconnexion(request):
     logout(request)
     
-    return redirect("homework:connexion")
+    return redirect("homework:accueil")
     
 def bureau(request):
     if estEtudiant(request.user):

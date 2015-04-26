@@ -4,13 +4,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block titre %}Base Professeur{% endblock %}</title>
-</head>
+    </head>
     <body>
         <a href="{% url 'homework:bureau'  %}">Bureau</a>
-        <a href="{% url 'homework:deconnexion'  %}">Se deconnecter</a>
         <a href="{% url 'homework:classeIndex'  %}">Classes</a>
         <a href="{% url 'homework:devoirIndex'  %}">Devoirs</a>
-        <p1>{{ user.username }}</p1>
+        <p1>Connecté en tant que professeur <b>{{ user.username }}</b></p1>
+        <a href="{% url 'homework:deconnexion'  %}">Se deconnecter</a>
         {% block body %}
             <h1>Hello, world!</h1>
         {% endblock %}
