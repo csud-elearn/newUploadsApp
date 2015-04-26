@@ -120,8 +120,9 @@ def classeIndex(request):
                     classe.branche = creerClasseForm.cleaned_data["branche"]
                     classe.professeur = professeur
                     classe.save()
+                    creerClasseForm = CreerClasseForm()
         else:
-            creerClasseForm = creerClasseForm()
+            creerClasseForm = CreerClasseForm()
         
         return render(request, "professeur/classeIndex.html", locals())
     
