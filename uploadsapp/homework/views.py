@@ -158,6 +158,9 @@ def classeEdition(request, classeNom):
                     etudiantSupprForm = EtudiantSupprForm()
                     etudiantAjoutForm = EtudiantAjoutForm()
                 
+                etudiantSupprForm.fields['etudiants'].queryset = Etudiant.objects.filter(classe=classe)
+                etudiantAjoutForm.fields['etudiants'].queryset = Etudiant.objects.exclude(classe=classe)
+                
                 return render(request, "professeur/classeEditionPropre.html", locals())
             else:
                 return render(request, "professeur/classeEditionAutre.html", locals())
@@ -176,7 +179,6 @@ def devoirIndex(request):
         professeur = Professeur.objects.get(user=request.user)
         classes = Classe.objects.filter(professeur=professeur)
         devoirs = Devoir.objects.filter(professeur=professeur)
-        form.fields['classe'].queryset = Classe.objects.filter(professeur=professeur)
         
         if request.method == "POST":
             creerDevoirForm = CreerDevoirForm(request.POST, request.FILES)
@@ -200,6 +202,8 @@ def devoirIndex(request):
                         tag.save()
         else:
             creerDevoirForm = CreerDevoirForm()
+        
+        creerDevoirForm.fields['classe'].queryset = Classe.objects.filter(professeur=professeur)
         
         return render(request, "professeur/devoirIndex.html", locals())
     
