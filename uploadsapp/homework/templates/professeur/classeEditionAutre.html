@@ -1,0 +1,14 @@
+{% extends "baseProfesseur.html" %}
+
+{% block titre %}
+    classe {{ classe }} de {{ classe.professeur }}
+{% endblock %}
+
+{% block body %}
+    <h1>classe {{ classe }} de {{ classe.professeur }}</h1>
+    <h2>Voici les élèves</h2>
+    <ul>
+    {% for etudiant in classeEtudiants %}
+        <li>{{ etudiant.user.username }}</li>
+    {% endfor %}
+{% endblock %}

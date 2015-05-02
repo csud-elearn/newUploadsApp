@@ -1,0 +1,14 @@
+{% extends "baseEtudiant.html" %}
+
+{% block titre %}
+    Vos classes
+{% endblock %}
+
+{% block body %}
+    <h1>Voici vos classes</h1>
+    <ul>
+    {% for classe in classes %}
+        <li><a href="{% url 'homework:classeEdition' classe.nom %}">{{ classe.branche }}: {{ classe.nom }}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

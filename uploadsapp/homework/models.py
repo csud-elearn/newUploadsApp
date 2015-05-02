@@ -21,7 +21,7 @@ class Classe(models.Model):
     professeur = models.ForeignKey("Professeur")
     
     def __str__(self):
-        return self.nom
+        return "{}: {}".format(self.branche, self.nom)
         
 class Image(models.Model):
     etudiant = models.ForeignKey("Etudiant")

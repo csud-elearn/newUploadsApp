@@ -1,0 +1,20 @@
+{% extends "baseProfesseur.html" %}
+
+{% block titre %}
+    Vos devoirs
+{% endblock %}
+
+{% block body %}
+    <h1>Voici vos devoirs</h1>
+    <ul>
+    {% for devoir in devoirs %}
+        <li>{{ devoir.titre }} - A rendre le {{ devoir.dateReddition }}</li>
+    {% endfor %}
+    </ul>
+    <h1>Créer un devoir</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ creerDevoirForm.as_p }}
+        <input type="submit" value="Creer"/>
+    </form>
+{% endblock %}

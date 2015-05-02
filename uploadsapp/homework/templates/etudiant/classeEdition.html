@@ -1,0 +1,23 @@
+{% extends "baseEtudiant.html" %}
+
+{% block titre %}
+    classe {{ classe }}
+{% endblock %}
+
+{% block body %}
+    <h1>classe {{ classe }}</h1>
+    <h2>{{ classe.professeur }}</h2>
+    <h3>Vos camarades</h3>
+    {% for etudiant in classeEtudiants %}
+        <li>{{ etudiant.user.username }}</li>
+    {% endfor %}
+    <h2>Quitter cette classe</h2>
+    {% if erreur %}
+        <p>Le nom de la classe ne correspond pas</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ quitterClasseForm.as_p }}
+        <input type="submit"  name="quitterClasse"  value="Quitter"/>
+    </form>
+{% endblock %}
