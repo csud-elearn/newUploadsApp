@@ -8,7 +8,7 @@
     <h1>Voici vos devoirs</h1>
     <ul>
     {% for devoir in devoirs %}
-        <li>{{ devoir.titre }} - A rendre le {{ devoir.dateReddition }}</li>
+        <li><a href="{% url 'homework:devoirEdition' devoir.titre %}">{{ devoir.professeur }}: {{ devoir.titre }} - A rendre le {{ devoir.dateReddition }}</a></li>
     {% endfor %}
     </ul>
 {% endblock %}

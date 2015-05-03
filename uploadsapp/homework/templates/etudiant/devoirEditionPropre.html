@@ -1,0 +1,14 @@
+{% extends "baseEtudiant.html" %}
+
+{% block titre %}
+    {{ devoir.titre }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ devoir.titre }}</h1>
+    <h2>Proposé par {{ devoir.professeur }}</h2>
+    <p>{{ devoir.consigne }}</p>
+    <p><img src="{{ devoir.consigneImg.url }}"></p>
+    <p>A rendre avant le {{ devoir.dateReddition }}: <a href="{% url 'homework:chargerImage' devoir.titre %}">Charger une image</p>
+
+{% endblock %}

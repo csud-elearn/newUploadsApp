@@ -87,7 +87,8 @@ def connexion(request):
             connexionForm = ConnexionForm()
             
         return render(request, "homework/connexion.html", locals())
-    
+        #return render(request, "material/connexion.html", locals())
+        
 def deconnexion(request):
     logout(request)
     
@@ -240,9 +241,9 @@ def devoirIndex(request):
     elif estEtudiant(request.user):
         etudiant = Etudiant.objects.get(user=request.user)
         classes = etudiant.classe.all()
-        devoirsTous = Devoir.objects.all()
-        devoirs = [devoir for devoir in devoirsTous if Devoir.classe in classes]
         
+        devoirs = Devoir.objects.all().filter(classe=classes).distinct().order_by("-dateReddition")
+            
         return render(request, "etudiant/devoirIndex.html", locals())
     
     else:
@@ -283,9 +284,13 @@ def devoirEdition(request, devoirTitre):
     elif estEtudiant(request.user):
         etudiant = Etudiant.objects.get(user=request.user)
         autorise = False
-        for devoirClasse in devoir.classe:
-            if devoirClasse in etudiant.classe:
-                autorise = True
+        
+        classes = etudiant.classe.all()
+        devoirs = Devoir.objects.all().filter(classe=classes).distinct()
+        
+        if devoir in devoirs:
+            autorise=True
+        
         if autorise:
             return render(request, "etudiant/devoirEditionPropre.html", locals())
         else:
