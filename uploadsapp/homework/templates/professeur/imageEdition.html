@@ -1,0 +1,12 @@
+{% extends "baseProfesseur.html" %}
+
+{% block titre %}
+    {{ image }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ image }}</h1>
+    <p><img src="{{ image.photo.url }}"></p>
+    <p>{{ image.description }}</p>
+    <p>{{ image.date }}</p>
+{% endblock %}

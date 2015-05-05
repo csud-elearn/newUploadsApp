@@ -1,0 +1,16 @@
+{% extends "baseEtudiant.html" %}
+
+{% block titre %}
+    Image {{ image.devoir }}
+{% endblock %}
+
+{% block body %}
+    {% if imageAucune %}
+    <p>Vous n'avez proposé aucune réponse pour ce devoir.</p>
+    {% else %}
+    <h1>Image {{ image.devoir }}</h1>
+    <img src="{{ image.photo.url }}">
+    <p>{{ image.description }}</p>
+    <p>{{ image.date }}</p>
+    {% endif %}
+{% endblock %}

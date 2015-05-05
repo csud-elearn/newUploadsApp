@@ -1,0 +1,21 @@
+{% extends "baseEtudiant.html" %}
+
+{% block titre %}
+    {{ devoir }}
+{% endblock %}
+
+{% block body %}
+    {% if dejaFait %}
+    <p>Vous avez déjà fait ce devoir</p>
+    {% else %}
+    <h1>Charger une image pour {{ devoir }}</h1>
+    {% if reussi %}
+    <h2>Cette image a bien été chargée</h2>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ chargerImageForm.as_p }}
+        <input type="submit" value="Charger"/>
+    </form>
+    {% endif %}
+{% endblock %}

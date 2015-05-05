@@ -4,9 +4,12 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block titre %}Base Etudiant{% endblock %}</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'style.css' %}" />
     </head>
     <body>
         <a href="{% url 'homework:bureau'  %}">Bureau</a>
+        <a href="{% url 'homework:imageIndexEtudiant'  %}">Images</a>
         <a href="{% url 'homework:classeIndex'  %}">Classes</a>
         <a href="{% url 'homework:devoirIndex'  %}">Devoirs</a>
         <p1>Connecté en tant qu'élève <b>{{ user.username }}</b></p1>

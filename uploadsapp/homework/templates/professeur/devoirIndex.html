@@ -8,11 +8,11 @@
     <h1>Voici vos devoirs</h1>
     <ul>
     {% for devoir in devoirs %}
-        <li>{{ devoir.titre }} - A rendre le {{ devoir.dateReddition }}</li>
+        <li><a href="{% url 'homework:devoirEdition' devoir.titre %}">{{ devoir.titre }} - A rendre le {{ devoir.dateReddition }}</a></li>
     {% endfor %}
     </ul>
     <h1>Créer un devoir</h1>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ creerDevoirForm.as_p }}
         <input type="submit" value="Creer"/>

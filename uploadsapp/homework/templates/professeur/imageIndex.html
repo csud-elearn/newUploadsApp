@@ -1,0 +1,15 @@
+{% extends "baseProfesseur.html" %}
+
+{% block titre %}
+    Vos images
+{% endblock %}
+
+{% block body %}
+    <h1>Devoir {{ devoir }}</h1>
+    <ul>
+    {% for image in images %}
+    <li><a href="{% url 'homework:imageEditionProfesseur' image.id %}"><img src="{{ image.photo.url }}">
+        <p>{{ image.etudiant }}</p></a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

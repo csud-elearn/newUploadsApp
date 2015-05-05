@@ -6,9 +6,20 @@
 
 {% block body %}
     <h1>{{ devoir.titre }}</h1>
+    
     <h2>Proposé par {{ devoir.professeur }}</h2>
-    <p>{{ devoir.consigne }}</p>
+    
+    <p>Consigne: {{ devoir.consigne }}</p>
+    <p>Reponse: {{ devoir.reponse }}</p>
+    
+    <p>Consigne en image</p>
     <p><img src="{{ devoir.consigneImg.url }}"></p>
+    
+    <p>Réponse en image</p>
+    <p><img src="{{ devoir.reponseImg.url }}"></p>
+    
+    {% if autorise %}
     <p>A rendre avant le {{ devoir.dateReddition }}: <a href="{% url 'homework:chargerImage' devoir.titre %}">Charger une image</p>
+    {% endif %}
 
 {% endblock %}

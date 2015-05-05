@@ -48,11 +48,14 @@ class QuitterClasseForm(forms.Form):
 class CreerDevoirForm(forms.Form):
     titre = forms.CharField(label="Titre", max_length=50, widget=forms.TextInput())
     consigne = forms.CharField(label="Consigne", max_length=300, widget=forms.Textarea())
-    consigneImg = forms.ImageField(label="Consigne en image", required=False, widget=forms.FileInput())
-    reponse = forms.CharField(label="Réponse", required=False, max_length=300, widget=forms.Textarea())
-    reponseImg = forms.ImageField(label="Réponse en image", required=False, widget=forms.FileInput())
+    consigneImg = forms.ImageField(label="Consigne en image", widget=forms.FileInput(attrs={'accept': 'image/*'}))
+    reponse = forms.CharField(label="Réponse",  max_length=300, widget=forms.Textarea())
+    reponseImg = forms.ImageField(label="Réponse en image", widget=forms.FileInput(attrs={'accept': 'image/*'}))
     dateReddition = forms.DateField(label="Date de reddition", widget=forms.DateInput())
     classe = forms.ModelMultipleChoiceField(label="Classes", queryset=Classe.objects.all(), to_field_name="id", widget=forms.CheckboxSelectMultiple())
+    
+class DevoirConsForm(forms.Form):
+    consigne = forms.CharField(label="Consigne", max_length=300, widget=forms.Textarea())
     
 class DevoirConsImgForm(forms.Form):
     consigneImg = forms.ImageField(label="Consigne en image", widget=forms.FileInput())
@@ -68,4 +71,4 @@ class DevoirDateForm(forms.Form):
 
 class ChargerImageForm(forms.Form):
     photo = forms.ImageField(label="Photo", widget=forms.FileInput())
-    description = forms.CharField(label="Consigne", required=False, max_length=300, widget=forms.Textarea())
+    description = forms.CharField(label="Description", required=False, max_length=300, widget=forms.Textarea())

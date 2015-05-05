@@ -6,8 +6,6 @@ from homework.auth_utils import *
 from homework.models import *
 from homework.forms import *
 
-from django.http import HttpResponse
-
 def accueil(request):
     return render(request, "homework/accueil.html")
     
@@ -253,34 +251,46 @@ def devoirEdition(request, devoirTitre):
     devoir = Devoir.objects.get(titre=devoirTitre)
     if estProfesseur(request.user):
         professeurConnecte = Professeur.objects.get(user=request.user)
-        devoirProfesseur = devoir.Professeur
+        devoirProfesseur = devoir.professeur
+        autorise = True
         if professeurConnecte == devoirProfesseur:
             if request.method == "POST":
-                if 'devoirConsImg' in request.POST:
+                if 'devoirCons' in request.POST:
+                    devoirConsForm = DevoirConsForm(request.POST, request.FILES)
+                    if devoirConsForm.is_valid():
+                        devoir.consigne = devoirConsForm.cleaned_data["consigne"]
+                        devoir.save()
+                elif 'devoirConsImg' in request.POST:
                     devoirConsImgForm = DevoirConsImgForm(request.POST, request.FILES)
-                    devoir.consigneImg = devoirConsImgForm.cleaned_data["consigneImg"]
-                    devoir.save()
+                    if devoirConsImgForm.is_valid():
+                        devoir.consigneImg = devoirConsImgForm.cleaned_data["consigneImg"]
+                        devoir.save()
                 elif 'devoirRep' in request.POST:
                     devoirRepForm = DevoirRepForm(request.POST, request.FILES)
-                    devoir.reponse = devoirRepForm.cleaned_data["reponse"]
-                    devoir.save()        
+                    if devoirRepForm.is_valid():
+                        devoir.reponse = devoirRepForm.cleaned_data["reponse"]
+                        devoir.save()        
                 elif 'devoirRepImg' in request.POST:
                     devoirRepImgForm = DevoirRepImgForm(request.POST, request.FILES)
-                    devoir.reponseImg = devoirRepImgForm.cleaned_data["reponseImg"]
-                    devoir.save()    
+                    if devoirRepImgForm.is_valid():
+                        devoir.reponseImg = devoirRepImgForm.cleaned_data["reponseImg"]
+                        devoir.save()    
                 elif 'devoirDate' in request.POST:
                     devoirDateForm = DevoirDateForm(request.POST, request.FILES)
-                    devoir.dateReddition = devoirDateForm.cleaned_data["dateReddition"]
-                    devoir.save()
-            else:
-                devoirConsImgForm = DevoirConsImgForm()
-                devoirRepForm = DevoirRepForm()
-                devoirRepImgForm = DevoirRepImgForm()
-                devoirDateForm = DevoirDateForm()
+                    if devoirDateForm.is_valid():
+                        devoir.dateReddition = devoirDateForm.cleaned_data["dateReddition"]
+                        devoir.save()
             
-            return render(request, "professeur/devoirEditionPropre.html", locals())
+            devoirConsForm = DevoirConsForm()
+            devoirConsImgForm = DevoirConsImgForm()
+            devoirRepForm = DevoirRepForm()
+            devoirRepImgForm = DevoirRepImgForm()
+            devoirDateForm = DevoirDateForm()
+            
+            return render(request, "professeur/devoirEdition.html", locals())
         else:
-            return render(request, "professeur/devoirEditionAutre.html", locals()) 
+            autorise=False
+    
     elif estEtudiant(request.user):
         etudiant = Etudiant.objects.get(user=request.user)
         autorise = False
@@ -289,12 +299,10 @@ def devoirEdition(request, devoirTitre):
         devoirs = Devoir.objects.all().filter(classe=classes).distinct()
         
         if devoir in devoirs:
-            autorise=True
-        
-        if autorise:
-            return render(request, "etudiant/devoirEditionPropre.html", locals())
+            autorise = True
         else:
-            return render(request, "etudiant/devoirEditionAutre.html", locals())
+            autorise = False
+        return render(request, "etudiant/devoirEdition.html", locals())
     else:
         return redirect("homework:connexion")
 
@@ -305,6 +313,14 @@ def chargerImage(request, devoirTitre):
     elif estEtudiant(request.user):
         devoir = Devoir.objects.get(titre=devoirTitre)
         etudiant = Etudiant.objects.get(user=request.user)
+        reussi = False
+        
+        dejaFait = False
+        images = Image.objects.filter(etudiant=etudiant)
+        for image in images:
+            if image.devoir == devoir:
+                dejaFait = True
+                
         if request.method == "POST":
             chargerImageForm = ChargerImageForm(request.POST, request.FILES)
             if chargerImageForm.is_valid():
@@ -313,6 +329,8 @@ def chargerImage(request, devoirTitre):
                 image.photo = chargerImageForm.cleaned_data["photo"]
                 image.devoir = devoir
                 image.description = chargerImageForm.cleaned_data["description"]
+                image.save()
+                reussi = True
         else:
             chargerImageForm = ChargerImageForm()
         
@@ -326,9 +344,8 @@ def imageIndexEtudiant(request):
     elif estEtudiant(request.user):
         etudiant = Etudiant.objects.get(user=request.user)
         imageAucune = False
-        try:
-            images = Image.objects.filter(etudiant=etudiant)
-        except:
+        images = Image.objects.filter(etudiant=etudiant)
+        if len(images) == 0:
             imageAucune = True
             
         return render(request, "etudiant/imageIndex.html", locals())
@@ -343,8 +360,7 @@ def imageEditionEtudiant(request, devoirTitre):
         imageAucune = False
         try:
             devoir = Devoir.objects.get(titre=devoirTitre)
-            images = Image.objects.filter(etudiant=etudiant)
-            image = images.objects.get(devoir=devoir)
+            image = Image.objects.filter(etudiant=etudiant).get(devoir=devoir)
         except:
             imageAucune = True
         
@@ -352,42 +368,27 @@ def imageEditionEtudiant(request, devoirTitre):
     else:
         return redirect("homework:connexion")
 
-def imageIndexProfesseur(request, devoirTitre, classeNom):
+def imageIndexProfesseur(request, devoirTitre):
     if estEtudiant(request.user):
         return render(request, "etudiant/nonAutorise.html", locals())
     elif estProfesseur(request.user):
         professeur = Professeur.objects.get(user=request.user)
         devoir = Devoir.objects.get(titre=devoirTitre)
         if devoir.professeur == professeur:
-            classe = Classe.objects.get(nom=classeNom)
-            etudiants = Etudiant.objects.filter(classe=classe)
-            images = Image.objects.filter(devoir=devoir, etudiant=etudiants)
-            #imagesDevoirClasse = imagesDevoir.filter(etudiant in etudiants)
-            #imagesDevoirClasse = []
-            #for etudiant in etudiants:
-            #try:
-            #   image = imagesDevoir.get(etudiant=etudiant)
-            #   imagesDevoirClasse.append(image)
-            #except:
-            #   pass
+            images = Image.objects.filter(devoir=devoir)
+            
             return render(request, "professeur/imageIndex.html", locals())
         else:
             return render(request, "professeur/nonAutorise.html", locals())
     else:
         return redirect("homework:connexion")
 
-def imageEditionProfesseur(request, devoirTitre, etudiantUsername):
+def imageEditionProfesseur(request, imageId):
     if estEtudiant(request.user):
         return render(request, "etudiant/nonAutorise.html", locals())
     elif estProfesseur(request.user):
-        devoir = Devoir.objects.get(titre=devoirTitre)
-        professeur = Professeur.objects.get(request.user)
-        if professeur == devoir.professeur:
-            etudiant = Etudiant.objects.get(username=etudiantUsername)
-            imageEleve = Image.objects.filter(etudiant=etudiant, devoir=devoir)
+        image = Image.objects.get(id=imageId)
                 
-            return render(request, "professeur/imageEdition.html", locals())
-        else:
-            return render(request, "professeur/nonAutorise.html", locals())
+        return render(request, "professeur/imageEdition.html", locals())
     else:
         return redirect("homework:connexion")

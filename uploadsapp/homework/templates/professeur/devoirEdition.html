@@ -1,0 +1,56 @@
+{% extends "baseProfesseur.html" %}
+
+{% block titre %}
+    Devoir: {{ devoir }}
+{% endblock %}
+
+{% block body %}
+    <h1>devoir {{ devoir }}</h1>
+    <p>Consigne: {{ devoir.consigne }}</p>
+    <p>Reponse: {{ devoir.reponse }}</p>
+    
+    <p>Consigne en image</p>
+    <p><img src="{{ devoir.consigneImg.url }}"></p>
+    
+    <p>Réponse en image</p>
+    <p><img src="{{ devoir.reponseImg.url }}"></p>
+    
+    {% if autorise %}
+        <p>Modifier consigne</p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ devoirConsForm.as_p }}
+            <input type="submit" name="devoirCons" value="Modifier"/>
+        </form>
+        
+        <p>Modifier consigne en image</p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ devoirConsImgForm.as_p }}
+            <input type="submit" name="devoirConsImg" value="Modifier"/>
+        </form>
+        
+        <p>Modifier réponse</p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ devoirRepForm.as_p }}
+            <input type="submit" name="devoirRep" value="Modifier"/>
+        </form>
+        
+        <p>Modifier réponse en image</p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ devoirRepImgForm.as_p }}
+            <input type="submit" name="devoirRepImg" value="Modifier"/>
+        </form>
+        
+        <p>Modifier date</p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ devoirDateForm.as_p }}
+            <input type="submit" name="devoirDate" value="Modifier"/>
+        </form>
+        
+        <p><a href="{% url 'homework:imageIndexProfesseur' devoir.titre %}">Solutions proposées</a></p>
+    {% endif %}
+{% endblock %}

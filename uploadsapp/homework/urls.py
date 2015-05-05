@@ -18,7 +18,7 @@ urlpatterns = patterns('',
  url(r'^chargerimage/(?P<devoirTitre>\w+)/', views.chargerImage, name='chargerImage'),
  url(r'^mesImages/', views.imageIndexEtudiant, name='imageIndexEtudiant'),
  url(r'^monimage/(?P<devoirTitre>\w+)/', views.imageEditionEtudiant, name='imageEditionEtudiant'),
- url(r'^images/(?P<devoirTitre>\w+)/(?P<classeNom>\w+)/', views.imageIndexProfesseur, name='imageIndexProfesseur'),
- url(r'^image/(?P<devoirTitre>\w+)/(?P<etudiantUsername>\w+)/', views.imageEditionProfesseur, name='imageEditionProfesseur')
+ url(r'^images/(?P<devoirTitre>\w+)/', views.imageIndexProfesseur, name='imageIndexProfesseur'),
+ url(r'^image/(?P<imageId>\w+)/', views.imageEditionProfesseur, name='imageEditionProfesseur')
  
 )
