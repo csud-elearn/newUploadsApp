@@ -4,15 +4,15 @@ from django.forms.extras.widgets import *
 from homework.models import Classe, Etudiant
 
 class InscriptionForm(forms.Form):
-    prenom = forms.CharField(label="Prénom", max_length=30, widget=forms.TextInput())
-    nom = forms.CharField(label="Nom", max_length=30, widget=forms.TextInput())
-    courriel = forms.CharField(label='E-mail', widget=forms.EmailInput())
+    prenom = forms.CharField(label="Prénom", max_length=30, widget=forms.TextInput(attrs={'class': 'validate', 'type': 'text'}))
+    nom = forms.CharField(label="Nom", max_length=30, widget=forms.TextInput(attrs={'class': 'validate', 'type': 'text'}))
+    courriel = forms.CharField(label='E-mail', widget=forms.EmailInput(attrs={'class': 'validate', 'type': 'email'}))
     modeleCompte = forms.ChoiceField(label='Type de compte', choices=(
         ("professeur", "Professeur"),
         ("etudiant", "Étudiant"),
         ))
-    pseudo = forms.CharField(label="Pseudo", max_length=30, widget=forms.TextInput())
-    motDePasse = forms.CharField(label="Mot de passe", widget=forms.PasswordInput())
+    pseudo = forms.CharField(label="Pseudo", max_length=30, widget=forms.TextInput(attrs={'class': 'validate', 'type': 'text'}))
+    motDePasse = forms.CharField(label="Mot de passe", widget=forms.PasswordInput(attrs={'class': 'validate', 'type': 'password'}))
 
 class ConnexionForm(forms.Form):
     pseudo = forms.CharField(label="Pseudo", max_length=30, widget=forms.TextInput())

@@ -8,12 +8,20 @@
     {% if imageAucune %}
     <p>Vous n'avez aucune image</p>
     {% else %}
-    <h1>Voici vos images</h1>
-    <ul>
     {% for image in images %}
-        <p>Pour {{ image.devoir }}, le {{ image.date }}</p>
-        <li><a href="{% url 'homework:imageEditionEtudiant' image.devoir %}"><img src="{{ image.photo.url }}"></a></li>
+    <div class="card">
+        <div class="card-image waves-effect waves-block waves-light">
+            <img class="activator" src="{{ image.photo.url }}">
+        </div>
+        <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">{{ image.devoir }}, le {{ image.date }}<i class="mdi-navigation-more-vert right"></i></span>
+            <p><a href="{% url 'homework:imageEditionEtudiant' image.devoir %}">Détails</a></p>
+        </div>
+        <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">{{ image.devoir }}, le {{ image.date }}<i class="mdi-navigation-close right"></i></span>
+            <p>{{ image.description }}</p>
+        </div>
+    </div>
     {% endfor %}
-    </ul>
     {% endif %}
 {% endblock %}

@@ -1,9 +1,29 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+
+{% block scripts %}
+<script src="{% static 'parallax.js' %}"></script>
+{% endblock %}
 
 {% block titre %}
     accueil
 {% endblock %}
 
+{% block logo %}
+    Accueil
+{% endblock %}
+
 {% block body %}
-    <h1>Bonjour</h1>
+<div class="parallax-container">
+    <div class="parallax"><img src="{% static 'images/cool.jpg' %}"></div>
+</div>
+<div class="section white">
+    <div class="row container">
+        <h2 class="header">Bienvenue</h2>
+        <p class="grey-text text-darken-3 lighten-3">
+            Cette application vous permet, en tant que professeur, de créer
+            des classes composées d'élèves inscrits, leur communiquer des devoirs,
+            voir leurs résolutions, ... En développement.
+        </div>
+</div>
 {% endblock %}

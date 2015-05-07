@@ -1,14 +1,44 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+
+{% block scripts %}
+<script src="{% static 'parallax.js' %}"></script>
+{% endblock %}
 
 {% block titre %}
     connexion
 {% endblock %}
 
+{% block logo %}
+    Connexion
+{% endblock %}
+
 {% block body %}
-    <h1>Se connecter</h1>
-    <form method="post">
+<div class="parallax-container">
+    <div class="parallax"><img src="{% static 'images/cool.jpg' %}"></div>
+</div>
+<div class="row formulaires">
+    <form method="post" class="col s12">
         {% csrf_token %}
-        {{ connexionForm.as_p }}
-        <input type="submit" value="Se connecter"/>
+        {{ connexionForm.non_field_errors }}
+        
+        <div class="row">
+            {{ connexionForm.pseudo.errors }}
+            <div class="input-field col s12">
+            <label for="{{ connexionForm.pseudo.id_for_label }}">Pseudo</label>
+            {{ connexionForm.pseudo }}
+            </div>
+        </div>
+        
+        <div class="row">
+            {{ connexionForm.motDePasse.errors }}
+            <div class="input-field col s12">
+            <label for="{{ connexionForm.motDePasse.id_for_label }}">Mot de passe</label>
+            {{ connexionForm.motDePasse }}
+            </div>
+        </div>
+        
+        <button type="submit" value="Submit" class="waves-effect waves-light btn">Se connecter</button>
     </form>
+</div>
 {% endblock %}

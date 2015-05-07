@@ -1,14 +1,79 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+
+{% block scripts %}
+<script src="{% static 'parallax.js' %}"></script>
+<script src="{% static 'select.js' %}"></script>
+{% endblock %}
 
 {% block titre %}
     Inscription
 {% endblock %}
 
+{% block logo %}
+    Inscription
+{% endblock %}
+
 {% block body %}
-    <h1>S'inscrire</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ inscriptionForm.as_p }}
-        <input type="submit" value="S'inscrire"/>
-    </form>
+    <div class="parallax-container">
+        <div class="parallax"><img src="{% static 'images/cool.jpg' %}"></div>
+    </div>
+    <div class="row formulaires">
+        <form method="post" class="col s12">
+            {% csrf_token %}
+            {{ inscriptionForm.non_field_errors }}
+            
+            <div class="row">
+                {{ inscriptionForm.prenom.errors }}
+                <div class="input-field col s6">
+                <label for="{{ inscriptionForm.prenom.id_for_label }}">Prénom</label>
+                {{ inscriptionForm.prenom }}
+                </div>
+                {{ inscriptionForm.nom.errors }}
+                <div class="input-field col s6">
+                <label for="{{ inscriptionForm.nom.id_for_label }}">Nom</label>
+                {{ inscriptionForm.nom }}
+                </div>
+            </div>
+            
+            <div class="row">
+                {{ inscriptionForm.courriel.errors }}
+                <div class="input-field col s12">
+                <label for="{{ inscriptionForm.courriel.id_for_label }}">Courriel</label>
+                {{ inscriptionForm.courriel }}
+                </div>
+            </div>
+            
+            <div class="row">
+                {{ inscriptionForm.pseudo.errors }}
+                <div class="input-field col s12">
+                <label for="{{ inscriptionForm.pseudo.id_for_label }}">Pseudo</label>
+                {{ inscriptionForm.pseudo }}
+                </div>
+            </div>
+            
+            <div class="row">
+                {{ inscriptionForm.modeleCompte.errors }}
+                <div class="input-field col s12">
+                    <select name="modeleCompte">
+                      <option value="" disabled selected>Choisir type</option>
+                      <option value="etudiant">Etudiant</option>
+                      <option value="professeur">Professeur</option>
+                    </select>
+                <label>Compte</label>
+                </div>
+            </div>
+            
+            <div class="row">
+                {{ inscriptionForm.motDePasse.errors }}
+                <div class="input-field col s12">
+                <label for="{{ inscriptionForm.motDePasse.id_for_label }}">Mot de passe</label>
+                {{ inscriptionForm.motDePasse }}
+                </div>
+            </div>
+            
+            <button type="submit" value="Submit" class="waves-effect waves-light btn">S'inscrire</button>
+            
+        </form>
+    </div>
 {% endblock %}
