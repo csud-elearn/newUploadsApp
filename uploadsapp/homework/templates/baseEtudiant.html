@@ -19,24 +19,26 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js"></script>
         {% block scripts %}{% endblock %}
         <header>
-            <nav>
-                <a href="#" class="brand-logo">{{ user.username }}</a>
-                <ul class="right hide-on-med-and-down">
-                    <li><a href="{% url 'homework:bureau'  %}">Mon bureau</a></li>
-                    <li><a href="{% url 'homework:imageIndexEtudiant'  %}">Mes images</a></li>
-                    <li><a href="{% url 'homework:classeIndex'  %}">Mes classes</a></li>
-                    <li><a href="{% url 'homework:devoirIndex'  %}">Mes devoirs</a></li>
-                    <li><a href="{% url 'homework:deconnexion'  %}">Me deconnecter</a></li>
-                </ul>
-                <ul id="slide-out" class="side-nav">
-                    <li><a href="{% url 'homework:bureau'  %}">Mon bureau</a></li>
-                    <li><a href="{% url 'homework:imageIndexEtudiant'  %}">Mes images</a></li>
-                    <li><a href="{% url 'homework:classeIndex'  %}">Mes classes</a></li>
-                    <li><a href="{% url 'homework:devoirIndex'  %}">Mes devoirs</a></li>
-                    <li><a href="{% url 'homework:deconnexion'  %}">Me déconnecter</a></li>
-                </ul>
-                <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
-            </nav>
+            <div class="navbar-fixed">
+                <nav>
+                    <a href="#" class="brand-logo">Elève: {{ user.username }}</a>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a href="{% url 'homework:bureau'  %}">Mon bureau</a></li>
+                        <li><a href="{% url 'homework:imageIndexEtudiant'  %}">Mes images</a></li>
+                        <li><a href="{% url 'homework:classeIndex'  %}">Mes classes</a></li>
+                        <li><a href="{% url 'homework:devoirIndex'  %}">Mes devoirs</a></li>
+                        <li><a href="{% url 'homework:deconnexion'  %}">Me deconnecter</a></li>
+                    </ul>
+                    <ul id="slide-out" class="side-nav">
+                        <li><a href="{% url 'homework:bureau'  %}">Mon bureau</a></li>
+                        <li><a href="{% url 'homework:imageIndexEtudiant'  %}">Mes images</a></li>
+                        <li><a href="{% url 'homework:classeIndex'  %}">Mes classes</a></li>
+                        <li><a href="{% url 'homework:devoirIndex'  %}">Mes devoirs</a></li>
+                        <li><a href="{% url 'homework:deconnexion'  %}">Me déconnecter</a></li>
+                    </ul>
+                    <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+                </nav>
+            </div>
         </header>
         <main>
         {% block body %}

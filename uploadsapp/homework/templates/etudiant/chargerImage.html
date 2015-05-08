@@ -6,12 +6,9 @@
 
 {% block body %}
     {% if dejaFait %}
-    <p>Vous avez déjà fait ce devoir</p>
+    <h2>Vous avez déjà fait ce devoir</h2>
     {% else %}
-    <h1>Charger une image pour {{ devoir }}</h1>
-    {% if reussi %}
-    <h2>Cette image a bien été chargée</h2>
-    {% endif %}
+    <h2>Charger une image pour {{ devoir }}</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ chargerImageForm.as_p }}

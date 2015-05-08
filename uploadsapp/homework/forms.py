@@ -70,5 +70,5 @@ class DevoirDateForm(forms.Form):
     dateReddition = forms.DateField(label="Date de reddition", widget=forms.DateInput())
 
 class ChargerImageForm(forms.Form):
-    photo = forms.ImageField(label="Photo", widget=forms.FileInput())
-    description = forms.CharField(label="Description", required=False, max_length=300, widget=forms.Textarea())
+    photo = forms.ImageField(label="Photo", widget=forms.FileInput(attrs={'class': 'file-path validate', 'type': 'file'}))
+    description = forms.CharField(label="Description", required=False, max_length=300, widget=forms.Textarea(attrs={'class': 'validate', 'type': 'text'}))

@@ -1,14 +1,52 @@
 {% extends "baseEtudiant.html" %}
+{% load staticfiles %}
 
 {% block titre %}
     Vos devoirs
 {% endblock %}
 
+{% block scripts %}
+    <script src="{% static 'tabs.js' %}"></script>
+    <script src="{% static 'collapsible.js' %}"></script>
+    <script src="{% static 'media.js' %}"></script>
+{% endblock %}
+
 {% block body %}
-    <h1>Voici vos devoirs</h1>
-    <ul>
-    {% for devoir in devoirs %}
-        <li><a href="{% url 'homework:devoirEdition' devoir.titre %}">{{ devoir.professeur }}: {{ devoir.titre }} - A rendre le {{ devoir.dateReddition }}</a></li>
-    {% endfor %}
-    </ul>
+    <div class="row">
+    <div class="col s12">
+      <ul class="tabs">
+        <li class="tab col s3"><a class="active" href="#aRendre">A rendre</a></li>
+        <li class="tab col s3"><a href="#rendu">Rendu</a></li>
+      </ul>
+    </div>
+    <div id="aRendre" class="col s12">
+        <ul class="collapsible popout" data-collapsible="accordion">
+        {% for devoir in pasFait %}
+        <li class="col s12">
+            <div class="collapsible-header"><i class=""></i>{{ devoir.titre }} - {{ devoir.dateReddition }}</div>
+            <div class="collapsible-body">
+                <p>Consigne: {{ devoir.consigne }}</p>
+                <img class="responsive-img" src="{{ devoir.consigneImg.url }}">
+                <div class="row">
+                <a href="{% url 'homework:chargerImage' devoir.titre %}" class="waves-effect waves-light btn">Résoudre !</a>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div id="rendu" class="col s12">
+        <ul class="collapsible popout" data-collapsible="accordion">
+        {% for devoir in dejaFait %}
+        <li class="col s12">
+            <div class="collapsible-header"><i class=""></i>{{ devoir.titre }} - {{ devoir.dateReddition }}</div>
+            <div class="collapsible-body">
+                <p>Consigne: {{ devoir.consigne }}</p>
+                <img class="responsive-img" src="{{ devoir.consigneImg.url }}">
+            </div>
+        </li>
+        {% endfor %}
+        </ul>
+    </div>
+  </div>
 {% endblock %}

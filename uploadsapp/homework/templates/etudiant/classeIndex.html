@@ -5,10 +5,13 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Voici vos classes</h1>
-    <ul>
-    {% for classe in classes %}
-        <li><a href="{% url 'homework:classeEdition' classe.nom %}">{{ classe.branche }}: {{ classe.nom }}</a></li>
-    {% endfor %}
-    </ul>
+    <div class="row">
+        <div class="col s12">
+            <div class="collection">
+                {% for classe in classes %}
+                <a href="{% url 'homework:classeEdition' classe.nom %}" class="collection-item">{{ classe.branche }}: {{ classe.nom }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

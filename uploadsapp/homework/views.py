@@ -94,6 +94,24 @@ def deconnexion(request):
     
 def bureau(request):
     if estEtudiant(request.user):
+        etudiant = Etudiant.objects.get(user=request.user)
+        classes = etudiant.classe.all()
+        images = Image.objects.filter(etudiant=etudiant)
+        
+        devoirs = Devoir.objects.all().filter(classe=classes).distinct().order_by("-dateReddition")
+        
+        dejaFait = []
+        pasFait = []
+        
+        for devoir in devoirs:
+            for image in images:
+                if image.devoir == devoir:
+                    dejaFait.append(devoir)
+        
+        for devoir in devoirs:
+            if devoir not in dejaFait:
+                pasFait.append(devoir)
+                
         return render(request, "etudiant/bureau.html", locals())
     
     elif estProfesseur(request.user):
@@ -239,9 +257,22 @@ def devoirIndex(request):
     elif estEtudiant(request.user):
         etudiant = Etudiant.objects.get(user=request.user)
         classes = etudiant.classe.all()
+        images = Image.objects.filter(etudiant=etudiant)
         
         devoirs = Devoir.objects.all().filter(classe=classes).distinct().order_by("-dateReddition")
-            
+        
+        dejaFait = []
+        pasFait = []
+        
+        for devoir in devoirs:
+            for image in images:
+                if image.devoir == devoir:
+                    dejaFait.append(devoir)
+        
+        for devoir in devoirs:
+            if devoir not in dejaFait:
+                pasFait.append(devoir)
+        
         return render(request, "etudiant/devoirIndex.html", locals())
     
     else:
@@ -313,7 +344,6 @@ def chargerImage(request, devoirTitre):
     elif estEtudiant(request.user):
         devoir = Devoir.objects.get(titre=devoirTitre)
         etudiant = Etudiant.objects.get(user=request.user)
-        reussi = False
         
         dejaFait = False
         images = Image.objects.filter(etudiant=etudiant)
@@ -330,7 +360,7 @@ def chargerImage(request, devoirTitre):
                 image.devoir = devoir
                 image.description = chargerImageForm.cleaned_data["description"]
                 image.save()
-                reussi = True
+                dejaFait = True
         else:
             chargerImageForm = ChargerImageForm()
         
