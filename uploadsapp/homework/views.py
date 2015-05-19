@@ -101,7 +101,7 @@ def bureau(request):
         devoirs = Devoir.objects.all().filter(classe=classes).distinct().order_by("-dateReddition")
         
         dejaFait = []
-        pasFait = []
+        devoirsAFaire = []
         
         for devoir in devoirs:
             for image in images:
@@ -110,7 +110,7 @@ def bureau(request):
         
         for devoir in devoirs:
             if devoir not in dejaFait:
-                pasFait.append(devoir)
+                devoirsAFaire.append(devoir)
                 
         return render(request, "etudiant/bureau.html", locals())
     
@@ -259,7 +259,7 @@ def devoirIndex(request):
         classes = etudiant.classe.all()
         images = Image.objects.filter(etudiant=etudiant)
         
-        devoirs = Devoir.objects.all().filter(classe=classes).distinct().order_by("-dateReddition")
+        devoirs = Devoir.objects.all().filter(classe=classes).order_by("-dateReddition")
         
         dejaFait = []
         pasFait = []
@@ -322,18 +322,6 @@ def devoirEdition(request, devoirTitre):
         else:
             autorise=False
     
-    elif estEtudiant(request.user):
-        etudiant = Etudiant.objects.get(user=request.user)
-        autorise = False
-        
-        classes = etudiant.classe.all()
-        devoirs = Devoir.objects.all().filter(classe=classes).distinct()
-        
-        if devoir in devoirs:
-            autorise = True
-        else:
-            autorise = False
-        return render(request, "etudiant/devoirEdition.html", locals())
     else:
         return redirect("homework:connexion")
 

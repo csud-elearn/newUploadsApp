@@ -10,6 +10,8 @@
         <!--Let browser know website is optimized for mobile-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta charset="utf-8">
+        <meta name="theme-color" content="#ee6e73">
+        <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />
         <title>{% block titre %}Accueil{% endblock %}</title>
     </head>
     <body>
@@ -21,7 +23,7 @@
         <header>
             <div class="navbar-fixed">
                 <nav>
-                    <a href="#" class="brand-logo">Elève: {{ user.username }}</a>
+                    <a href="#" class="brand-logo">{% block logo %}Elève: {{ user.username }}{% endblock %}</a>
                     <ul class="right hide-on-med-and-down">
                         <li><a href="{% url 'homework:bureau'  %}">Mon bureau</a></li>
                         <li><a href="{% url 'homework:imageIndexEtudiant'  %}">Mes images</a></li>
@@ -40,7 +42,7 @@
                 </nav>
             </div>
         </header>
-        <main>
+        <main class=" grey lighten-5">
         {% block body %}
             <h1>Hello, world!</h1>
         {% endblock %}

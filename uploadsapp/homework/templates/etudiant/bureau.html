@@ -4,6 +4,27 @@
     Bureau
 {% endblock %}
 
+{% block logo %}
+    Bureau
+{% endblock %}
+
 {% block body %}
-    <div class="row"><h1>Bonjour {{ user.username }}</h1></div>
+    {% for devoir in devoirsAFaire %}
+    <div class="row">
+        <div class="col s12 m7">
+          <div class="card">
+            <div class="card-image">
+              <img src="{{ devoir.consigneImg.url }}">
+              <span class="card-title">{{ devoir.titre}}</span>
+            </div>
+            <div class="card-content">
+              <p>{{ devoir.consigne }}</p>
+            </div>
+            <div class="card-action">
+              <a href="{% url 'homework:chargerImage' devoir.titre %}">Résoudre !</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
 {% endblock %}

@@ -44,6 +44,10 @@
                 <p>Consigne: {{ devoir.consigne }}</p>
                 <img class="responsive-img" src="{{ devoir.consigneImg.url }}">
             </div>
+            <div class="collapsible-body">
+                <p>Réponse: {{ devoir.reponse }}</p>
+                <img class="responsive-img" src="{{ devoir.reponseImg.url }}">
+            </div>
         </li>
         {% endfor %}
         </ul>
