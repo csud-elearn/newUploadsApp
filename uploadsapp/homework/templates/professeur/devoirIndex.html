@@ -5,13 +5,43 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Voici vos devoirs</h1>
-    <ul>
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content black-text">
+                    <span class="card-title black-text">Voici vos devoirs</span>
+                </div>
+            </div>
+        </div>
+    </div>
     {% for devoir in devoirs %}
-        <li><a href="{% url 'homework:devoirEdition' devoir.titre %}">{{ devoir.titre }} - A rendre le {{ devoir.dateReddition }}</a></li>
+    <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-image">
+              <img src="{{ devoir.consigneImg.url }}">
+              <span class="card-title">{{ devoir.titre}}</span>
+            </div>
+            <div class="card-content">
+              <p>{{ devoir.consigne }}</p>
+            </div>
+            <div class="card-action">
+              <a href="{% url 'homework:devoirEdition' devoir.titre %}">Editer</a>
+            </div>
+          </div>
+        </div>
+      </div>
     {% endfor %}
-    </ul>
-    <h1>Créer un devoir</h1>
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content black-text">
+                    <span class="card-title black-text">Créer un devoir</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ creerDevoirForm.as_p }}

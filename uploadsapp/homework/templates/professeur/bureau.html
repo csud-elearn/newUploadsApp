@@ -4,6 +4,50 @@
     Bureau
 {% endblock %}
 
+{% block logo %}
+    Bureau
+{% endblock %}
+
 {% block body %}
-    <h1>Bonjour {{ user.username }}</h1>
+    {% if imageAucune %}
+    <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-content black-text">
+              <span class="card-title black-text">Bonjour {{ user.username }}</span>
+              <p>Voici les dernières images chargées</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+    <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-content black-text">
+              <span class="card-title black-text">Bonjour {{ user.username }}</span>
+              <p>Voici les dernières images chargées</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% for image in imagesAMontrer %}
+    <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-image">
+              <img src="{{ image.photo.url }}">
+              <span class="card-title">{{ image.etudiant }}</span>
+            </div>
+            <div class="card-content">
+              <p>{{ image.description }}</p>
+            </div>
+            <div class="card-action">
+              <a href="{% url 'homework:imageEditionProfesseur' image.id %}">Détails</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    {% endif %}
 {% endblock %}

@@ -1,20 +1,71 @@
 {% extends "baseProfesseur.html" %}
+{% load staticfiles %}
 
+{% block scripts %}
+<script src="{% static 'select.js' %}"></script>
+{% endblock %}
 {% block titre %}
     Vos classes
 {% endblock %}
 
 {% block body %}
-    <h1>Voici vos classes</h1>
-    <ul>
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content black-text">
+                    <span class="card-title black-text">Voici vos classes</span>
+                </div>
+            </div>
+        </div>
+    </div>
     {% for classe in classes %}
-        <li><a href="{% url 'homework:classeEdition' classe.nom %}">{{ classe.branche }}: {{ classe.nom }}</a></li>
+        <div class="row">
+            <div class="col s12">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title  black-text">{{ classe }}</span>
+                        <div class="card-action">
+                        <a href="{% url 'homework:classeEdition' classe.nom %}">Détails</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endfor %}
-    </ul> 
-    <h1>Créer une classe</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ creerClasseForm.as_p }}
-        <input type="submit" value="Créer"/>
-    </form>
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content black-text">
+                    <span class="card-title black-text">Ajouter une classe</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <form method="post">
+                {% csrf_token %}
+                {{ creerClasseForm.non_field_errors }}
+                <div class="row">
+                    {{ creerClasseForm.nom.errors }}
+                    <div class="input-field col s12">
+                    <label for="{{ creerClasseForm.nom.id_for_label }}">Nom de classe</label>
+                    {{ creerClasseForm.nom }}
+                    </div>
+                </div>
+                <div class="row">
+                    {{ creerClasseForm.branche.errors }}
+                    <div class="input-field col s12">
+                        <select name="branche">
+                          {% for branche in branches %}
+                              <option value="{{ branche }}">{{ branche }}</option>
+                          {% endfor %}
+                        </select>
+                        <label>Branche</label>
+                    </div>
+                </div>
+                
+                <button type="submit" value="Submit" class="waves-effect waves-light btn">Créer</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

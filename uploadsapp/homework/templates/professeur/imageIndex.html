@@ -1,15 +1,42 @@
 {% extends "baseProfesseur.html" %}
 
 {% block titre %}
-    Vos images
+    Devoir {{ devoir }}
+{% endblock %}
+
+{% block logo %}
+    Devoir {{ devoir }}
 {% endblock %}
 
 {% block body %}
-    <h1>Devoir {{ devoir }}</h1>
-    <ul>
+    {% if imageAucune %}
+    <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-content black-text">
+              <span class="card-title black-text">Attention</span>
+              <p>Aucune image n'est disponible.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
     {% for image in images %}
-    <li><a href="{% url 'homework:imageEditionProfesseur' image.id %}"><img src="{{ image.photo.url }}">
-        <p>{{ image.etudiant }}</p></a></li>
-    {% endfor %}
-    </ul>
+    <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-image">
+              <img src="{{ image.photo.url }}">
+              <span class="card-title">{{ image.etudiant }}</span>
+            </div>
+            <div class="card-content">
+              <p>{{ image.description }}</div>
+            <div class="card-action">
+              <a href="{% url 'homework:imageEditionProfesseur' image.id %}">Détails</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
 {% endblock %}

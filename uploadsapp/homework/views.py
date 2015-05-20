@@ -115,6 +115,29 @@ def bureau(request):
         return render(request, "etudiant/bureau.html", locals())
     
     elif estProfesseur(request.user):
+        professeur = Professeur.objects.get(user=request.user)
+        classes = Classe.objects.filter(professeur=professeur)
+        eleves = []
+        
+        for classe in classes:
+            elevesAAjouter = Etudiant.objects.filter(classe=classe)
+            for eleveAAjouter in elevesAAjouter:
+                eleves.append(eleveAAjouter)
+        
+        images = Image.objects.all().order_by("-date")
+        
+        imagesAMontrer = []
+        
+        while len(imagesAMontrer) < 5:
+            for image in images:
+                if image.etudiant in eleves and image not in imagesAMontrer:
+                    imagesAMontrer.append(image)
+            if len(images) == len(imagesAMontrer):
+                break
+        if len(imagesAMontrer) == 0:
+            imageAucune = True
+        else:
+            imageAucune = False
         return render(request, "professeur/bureau.html", locals())
     
     else:
@@ -143,6 +166,19 @@ def classeIndex(request):
         else:
             creerClasseForm = CreerClasseForm()
         
+        branches = [("Allemand"),
+                    ("Anglais"),
+                    ("Arts Visuels"),
+                    ("Biologie"),
+                    ("Chimie"),
+                    ("Français"),
+                    ("Histoire"),
+                    ("Maths"),
+                    ("Musique"),
+                    ("Philosophie"),
+                    ("Physique"),
+                    ("Sport")]
+                    
         return render(request, "professeur/classeIndex.html", locals())
     
     elif estEtudiant(request.user):
@@ -394,7 +430,12 @@ def imageIndexProfesseur(request, devoirTitre):
         devoir = Devoir.objects.get(titre=devoirTitre)
         if devoir.professeur == professeur:
             images = Image.objects.filter(devoir=devoir)
+            if len(images) == 0:
+                imageAucune = True
+            else:
+                imageAucune = False
             
+        
             return render(request, "professeur/imageIndex.html", locals())
         else:
             return render(request, "professeur/nonAutorise.html", locals())
